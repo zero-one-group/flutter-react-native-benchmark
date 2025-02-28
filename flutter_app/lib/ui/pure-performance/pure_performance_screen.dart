@@ -8,22 +8,20 @@ class PurePerformanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pure Performance Test'),
-      ),
-      body: const ListItems(),
+      appBar: AppBar(title: const Text('Pure Performance Test')),
+      body: const BodyContent(),
     );
   }
 }
 
-class ListItems extends StatefulWidget {
-  const ListItems({super.key});
+class BodyContent extends StatefulWidget {
+  const BodyContent({super.key});
 
   @override
-  State<ListItems> createState() => _ListItemsState();
+  State<BodyContent> createState() => _BodyContentState();
 }
 
-class _ListItemsState extends State<ListItems> {
+class _BodyContentState extends State<BodyContent> {
   @override
   void initState() {
     super.initState();

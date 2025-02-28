@@ -7,8 +7,13 @@ class ItemRepository {
 
   final LocalDataService _localDataService;
 
-  Future<List<Item>> getItems() async {
-    final items = await _localDataService.getItems();
+  Future<List<Item>> get10KItems() async {
+    final items = await _localDataService.get10KItems();
+    return items.map((e) => Item.fromJson(e.toJson())).toList();
+  }
+
+  Future<List<Item>> get100Items() async {
+    final items = await _localDataService.get100Items();
     return items.map((e) => Item.fromJson(e.toJson())).toList();
   }
 }

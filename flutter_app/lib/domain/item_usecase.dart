@@ -7,7 +7,11 @@ class ItemUsecase {
 
   final ItemRepository _itemRepository;
 
-  Future<List<Item>> getItems() async {
-    return await _itemRepository.getItems();
+  Future<List<Item>> get10KItems() async {
+    return await _itemRepository.get10KItems();
+  }
+
+  Future<List<Item>> get100Items() async {
+    return await _itemRepository.get100Items();
   }
 }
