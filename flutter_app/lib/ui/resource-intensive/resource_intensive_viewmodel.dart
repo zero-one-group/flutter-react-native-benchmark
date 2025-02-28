@@ -3,8 +3,8 @@ import 'package:flutter_app/domain/item.dart';
 
 import 'package:flutter_app/domain/item_usecase.dart';
 
-class PurePerformanceViewModel extends ChangeNotifier {
-  PurePerformanceViewModel({required ItemUsecase itemUsecase})
+class ResourceIntensiveViewModel extends ChangeNotifier {
+  ResourceIntensiveViewModel({required ItemUsecase itemUsecase})
     : _itemUsecase = itemUsecase;
 
   final ItemUsecase _itemUsecase;
@@ -13,7 +13,7 @@ class PurePerformanceViewModel extends ChangeNotifier {
   List<Item> get items => _items;
 
   Future<void> getItems() async {
-    _items = await _itemUsecase.get10KItems();
+    _items = await _itemUsecase.get100Items();
     notifyListeners();
   }
 }
