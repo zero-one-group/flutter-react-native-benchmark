@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/resource-intensive/resource_intensive_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 
 class ResourceIntensiveScreen extends StatelessWidget {
   const ResourceIntensiveScreen({super.key});
@@ -63,7 +64,7 @@ class _BodyContentState extends State<BodyContent>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     const imageSize = 200.0;
-    
+
     return Stack(
       children: [
         Positioned(
@@ -79,7 +80,10 @@ class _BodyContentState extends State<BodyContent>
         Positioned.fill(
           child: Consumer<ResourceIntensiveViewModel>(
             builder: (context, viewModel, _) {
-              return GridView.builder(
+              return ReorderableGridView.builder(
+                onReorder: (oldIndex, newIndex) {
+                  viewModel.reorderItems(oldIndex, newIndex);
+                },
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 1.0,
@@ -89,6 +93,7 @@ class _BodyContentState extends State<BodyContent>
                 itemCount: viewModel.items.length,
                 itemBuilder: (context, index) {
                   return AnimatedBuilder(
+                    key: ValueKey(viewModel.items[index].id),
                     animation: _controller,
                     builder: (context, _) {
                       return Card(
