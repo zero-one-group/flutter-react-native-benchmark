@@ -49,50 +49,59 @@ export default function InputResponsiveness() {
   }, [])
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <Pressable
-          style={{...styles.switch, backgroundColor: isShow ? 'red' : 'blue'}}
-          onPress={() => {
-            setIsShow(prev => !prev)
-          }}
-        >
-          <Animated.View>
-            <Animated.Text style={{color: 'white', fontWeight: '500'}}>
-              {isShow ? 'Hide List' : 'Show List'}
-            </Animated.Text>
-          </Animated.View>
-        </Pressable>
-        <View style={styles.imageContainer}>
-          <Animated.View style={{transform: [{ rotate: spin }]}}>
-            <Image source={bgImage} />
-          </Animated.View>
-        </View>
-        {isShow && <FlatList
-          data={Array.from({ length: COUNT_ITEMS })}
-          numColumns={COLUMNS}
-          style={styles.gridContainer}
-          renderItem={renderItem}
-        />}
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <SafeAreaView style={styles.container}>
+      <Pressable
+        style={{...styles.switch, backgroundColor: isShow ? 'red' : 'blue'}}
+        onPress={() => {
+          setIsShow(prev => !prev)
+        }}
+      >
+        <Animated.View>
+          <Animated.Text style={{color: 'white', fontWeight: '500'}}>
+            {isShow ? 'Hide List' : 'Show List'}
+          </Animated.Text>
+        </Animated.View>
+      </Pressable>
+      <View style={styles.imageContainer}>
+        <Animated.View style={{transform: [{ rotate: spin }]}}>
+          <Image source={bgImage} />
+        </Animated.View>
+      </View>
+      {isShow && <FlatList
+        data={Array.from({ length: COUNT_ITEMS })}
+        numColumns={COLUMNS}
+        style={styles.gridContainer}
+        renderItem={renderItem}
+      />}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: Dimensions.get('window').height,
-    paddingInline: 20,
-    flexDirection: 'column',
-    gap: 3,
+    flex: 1
   },
   imageContainer: {
+    alignSelf: 'center',
     position: 'absolute',
-    left: '50%',
-    right: '50%',
-    height: Dimensions.get('window').height / 1.5,
-    justifyContent: 'center',
+    top: '30%'
+  },
+  gridContainer: {
+    flex: 1,
+    paddingInline: 10,
+  },
+  grid: {
+    borderRadius: 15,
     alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    margin: 3,
+    height: Dimensions.get('window').width / COLUMNS,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,  
+    elevation: 5
   },
   switch: {
     alignSelf: 'center',
@@ -103,25 +112,4 @@ const styles = StyleSheet.create({
     paddingBlock: 10,
     marginBlock: 10
   },
-  image: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  gridContainer: {
-    flex: 1,
-    marginBottom: 100
-  },
-  grid: {
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    margin: 3,
-    height: Dimensions.get('window').width / COLUMNS,
-    shadowColor: 'black',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,  
-    elevation: 3
-  }
 });

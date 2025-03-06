@@ -57,7 +57,9 @@ export default function IntensiveTasks() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.imageContainer}>
-          <Animated.View style={{transform: [{ rotate: spin }]}}>
+          <Animated.View
+            style={{transform: [{ rotate: spin }]}}
+          >
             <Image source={bgImage} />
           </Animated.View>
         </View>
@@ -74,23 +76,16 @@ export default function IntensiveTasks() {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: Dimensions.get('window').height,
-    paddingInline: 20,
-    flexDirection: 'row',
-    gap: 3,
-    justifyContent: 'center',
+    flex: 1
   },
   imageContainer: {
+    alignSelf: 'center',
     position: 'absolute',
-    left: '50%',
-    right: '50%',
-    height: Dimensions.get('window').height / 1.5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    top: '30%'
   },
   gridContainer: {
     flex: 1,
-    marginBottom: 100
+    paddingInline: 10,
   },
   grid: {
     borderRadius: 15,
