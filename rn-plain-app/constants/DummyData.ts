@@ -1,3 +1,5 @@
+import { Dimensions } from "react-native"
+
 export const data: { id: number, name: string}[] = [
   {
     "id": 1,
@@ -40000,3 +40002,9 @@ export const data: { id: number, name: string}[] = [
     "name": "Item 10000"
   }
 ]
+
+export const COLUMNS = 3
+export const MIN = 0
+export const MAX = 1
+export const COUNT_ITEMS = 100
+export const BOX_SIZE = Dimensions.get('screen').width / COLUMNS

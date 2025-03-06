@@ -1,12 +1,13 @@
+import { BOX_SIZE, COLUMNS, COUNT_ITEMS, MAX, MIN } from '@/constants/DummyData';
 import { useEffect, useState } from 'react';
-import { Animated, Dimensions, Easing, FlatList, Image, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Animated, Easing, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import DraggableGrid from 'react-native-draggable-grid';
 const bgImage = require('../../../assets/images/bg.png')
 
-const COLUMNS = 3
-const MIN = 0
-const MAX = 1
-const COUNT_ITEMS = 99
+export type Item = {
+  key: string
+  backgroundColor: string
+}
 
 const getRandomNumber = () => {
   return Math.floor(Math.random() * (MAX - MIN + 1) + MIN);
@@ -17,14 +18,23 @@ const generateBgColor = () => {
   return random === 1 ? '#FF6969' : '#6987FF'
 }
 
-const renderItem = () => {
+const renderItem = ({ backgroundColor }: Item) => {
   return <Animated.View style={{
     ...styles.grid, 
-    backgroundColor: generateBgColor(),
+    backgroundColor,
   }} />
 }
 
+const initValues: Item[] = Array.from({ length: COUNT_ITEMS }).map((_, index) => {
+  return {
+    key: (index + 1).toString(),
+    backgroundColor: generateBgColor(),
+  }
+})
+
 export default function InputResponsiveness() {
+  const [isScrollEnable, setIsScrollEnable] = useState<boolean>(true)
+  const [data, setData] = useState<Item[]>(initValues)
   const [isShow, setIsShow] = useState<boolean>(true);
   const [spinValue, _] = useState(new Animated.Value(0))
 
@@ -67,12 +77,21 @@ export default function InputResponsiveness() {
           <Image source={bgImage} />
         </Animated.View>
       </View>
-      {isShow && <FlatList
-        data={Array.from({ length: COUNT_ITEMS })}
-        numColumns={COLUMNS}
-        style={styles.gridContainer}
-        renderItem={renderItem}
-      />}
+      {isShow &&
+        <ScrollView scrollEnabled={isScrollEnable}>
+          <DraggableGrid
+            style={styles.gridContainer}
+            numColumns={COLUMNS}
+            renderItem={renderItem}
+            data={data}
+            onDragItemActive={() => setIsScrollEnable(false)}
+            onDragRelease={(data) => {
+              setData(data)
+              setIsScrollEnable(true)
+            }}
+          />
+        </ScrollView>
+      }
     </SafeAreaView>
   );
 }
@@ -88,20 +107,13 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    paddingInline: 10,
   },
   grid: {
-    borderRadius: 15,
-    alignItems: 'center',
+    width: BOX_SIZE - 10,
+    height: BOX_SIZE - 10,
+    borderRadius: 8,
     justifyContent: 'center',
-    flex: 1,
-    margin: 3,
-    height: Dimensions.get('window').width / COLUMNS,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,  
-    elevation: 5
+    alignItems: 'center',
   },
   switch: {
     alignSelf: 'center',

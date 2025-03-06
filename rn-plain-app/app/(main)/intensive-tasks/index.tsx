@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Animated, Dimensions, Easing, FlatList, Image, SafeAreaView, StyleSheet, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { BOX_SIZE, COLUMNS, COUNT_ITEMS, MAX, MIN } from '@/constants/DummyData'
+import { useEffect, useState } from 'react'
+import { Animated, Easing, Image, SafeAreaView, StyleSheet, View } from 'react-native'
+import DraggableGrid from 'react-native-draggable-grid'
+import { ScrollView } from 'react-native-gesture-handler'
 const bgImage = require('../../../assets/images/bg.png')
 
-const COLUMNS = 3
-const MIN = 0
-const MAX = 1
-const COUNT_ITEMS = 99
+export type Item = {
+  key: string
+  backgroundColor: string
+  borderColor: string
+}
 
 const getRandomNumber = () => {
-  return Math.floor(Math.random() * (MAX - MIN + 1) + MIN);
+  return Math.floor(Math.random() * (MAX - MIN + 1) + MIN)
 }
 
 const generateBgColor = () => {
@@ -22,15 +25,17 @@ const generateBorderColor = () => {
   return random === 1 ? '#F50000' : '#00F535'
 }
 
-const renderItem = () => {
-  return <Animated.View style={{
-    ...styles.grid, 
+const initValues: Item[] = Array.from({ length: COUNT_ITEMS }).map((_, index) => {
+  return {
+    key: (index + 1).toString(),
     backgroundColor: generateBgColor(),
-    borderColor: generateBorderColor(),
-  }} />
-}
+    borderColor: generateBorderColor()
+  }
+})
 
 export default function IntensiveTasks() {
+  const [isScrollEnable, setIsScrollEnable] = useState<boolean>(true)
+  const [data, setData] = useState<Item[]>(initValues)
   const [spinValue, _] = useState(new Animated.Value(0))
 
   const runAnimationFn = () => {
@@ -52,26 +57,39 @@ export default function IntensiveTasks() {
   useEffect(() => {
     runAnimationFn()
   }, [])
+
+  const renderItem = ({ backgroundColor, borderColor }: Item) => {
+    return <Animated.View style={{
+      ...styles.grid, 
+      backgroundColor,
+      borderColor,
+    }} />
+  }
   
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Animated.View
-            style={{transform: [{ rotate: spin }]}}
-          >
-            <Image source={bgImage} />
-          </Animated.View>
-        </View>
-        <FlatList
-          data={Array.from({ length: COUNT_ITEMS })}
-          numColumns={COLUMNS}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Animated.View
+          style={{transform: [{ rotate: spin }]}}
+        >
+          <Image source={bgImage} />
+        </Animated.View>
+      </View>
+      <ScrollView scrollEnabled={isScrollEnable}>
+        <DraggableGrid
           style={styles.gridContainer}
+          numColumns={COLUMNS}
           renderItem={renderItem}
+          data={data}
+          onDragItemActive={() => setIsScrollEnable(false)}
+          onDragRelease={(data) => {
+            setData(data)
+            setIsScrollEnable(true)
+          }}
         />
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+      </ScrollView>
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -85,20 +103,13 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    paddingInline: 10,
   },
   grid: {
-    borderRadius: 15,
+    width: BOX_SIZE - 10,
+    height: BOX_SIZE - 10,
     borderWidth: 2,
-    alignItems: 'center',
+    borderRadius: 8,
     justifyContent: 'center',
-    flex: 1,
-    margin: 3,
-    height: Dimensions.get('window').width / COLUMNS,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,  
-    elevation: 5
+    alignItems: 'center',
   }
-});
+})
