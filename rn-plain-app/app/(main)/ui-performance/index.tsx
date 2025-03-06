@@ -1,6 +1,4 @@
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { data } from '@/constants/DummyData';
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
