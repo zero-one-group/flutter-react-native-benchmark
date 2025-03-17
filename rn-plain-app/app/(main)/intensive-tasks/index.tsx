@@ -1,9 +1,9 @@
 import { BOX_SIZE, COLUMNS, COUNT_ITEMS } from '@/constants/DummyData'
 import { useEffect, useState } from 'react'
-import { Animated, Easing, Image, SafeAreaView, StyleSheet, View } from 'react-native'
+import { Animated, Dimensions, Easing, Image, SafeAreaView, StyleSheet, View } from 'react-native'
 import DraggableGrid from 'react-native-draggable-grid'
 import { ScrollView } from 'react-native-gesture-handler'
-const bgImage = require('../../../assets/images/bg.png')
+const bgImage = require('../../../assets/images/rotating-image.jpg')
 
 export type Item = {
   index: number
@@ -63,10 +63,8 @@ export default function IntensiveTasks() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
-        <Animated.View
-          style={{transform: [{ rotate: spin }]}}
-        >
-          <Image source={bgImage} />
+        <Animated.View style={{transform: [{ rotate: spin }]}}>
+          <Image resizeMode='cover' source={bgImage} style={styles.image} />
         </Animated.View>
       </View>
       <ScrollView scrollEnabled={isScrollEnable}>
@@ -94,6 +92,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     top: '30%'
+  },
+  image: {
+    overflow: 'visible',
+    width: Dimensions.get('window').width / 2,
+    height: Dimensions.get('window').width / 2,
   },
   gridContainer: {
     flex: 1,
