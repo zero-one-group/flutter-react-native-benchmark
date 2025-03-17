@@ -1,34 +1,18 @@
-import { BOX_SIZE, COLUMNS, COUNT_ITEMS, MAX, MIN } from '@/constants/DummyData';
+import { BOX_SIZE, COLUMNS, COUNT_ITEMS } from '@/constants/DummyData';
 import { useEffect, useState } from 'react';
-import { Animated, Easing, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Animated, Dimensions, Easing, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import DraggableGrid from 'react-native-draggable-grid';
-const bgImage = require('../../../assets/images/bg.png')
+const bgImage = require('../../../assets/images/rotating-image.jpg')
 
 export type Item = {
+  index: number
   key: string
-  backgroundColor: string
-}
-
-const getRandomNumber = () => {
-  return Math.floor(Math.random() * (MAX - MIN + 1) + MIN);
-}
-
-const generateBgColor = () => {
-  const random = getRandomNumber()
-  return random === 1 ? '#FF6969' : '#6987FF'
-}
-
-const renderItem = ({ backgroundColor }: Item) => {
-  return <Animated.View style={{
-    ...styles.grid, 
-    backgroundColor,
-  }} />
 }
 
 const initValues: Item[] = Array.from({ length: COUNT_ITEMS }).map((_, index) => {
   return {
+    index,
     key: (index + 1).toString(),
-    backgroundColor: generateBgColor(),
   }
 })
 
@@ -36,11 +20,11 @@ export default function InputResponsiveness() {
   const [isScrollEnable, setIsScrollEnable] = useState<boolean>(true)
   const [data, setData] = useState<Item[]>(initValues)
   const [isShow, setIsShow] = useState<boolean>(true);
-  const [spinValue, _] = useState(new Animated.Value(0))
+  const [animationValue, _] = useState(new Animated.Value(0))
 
   const runAnimationFn = () => {
     Animated.loop(
-      Animated.timing(spinValue, {
+      Animated.timing(animationValue, {
         toValue: 1,
         duration: 1500,
         easing: Easing.linear,
@@ -49,10 +33,22 @@ export default function InputResponsiveness() {
     ).start()
   }
 
-  const spin = spinValue.interpolate({
+  const spin = animationValue.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   })
+
+  const backgroundColor = (index: number) => animationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: index % 2 === 0 ? ['#FF6969', '#6987FF'] : ['#6987FF', '#FF6969']
+  });
+
+  const renderItem = ({ index }: Item) => {
+    return <Animated.View style={{
+      ...styles.grid, 
+      backgroundColor: backgroundColor(index),
+    }} />
+  }
 
   useEffect(() => {
     runAnimationFn()
@@ -74,7 +70,7 @@ export default function InputResponsiveness() {
       </Pressable>
       <View style={styles.imageContainer}>
         <Animated.View style={{transform: [{ rotate: spin }]}}>
-          <Image source={bgImage} />
+          <Image resizeMode='cover' source={bgImage} style={styles.image} />
         </Animated.View>
       </View>
       {isShow &&
@@ -104,6 +100,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     top: '30%'
+  },
+  image: {
+    overflow: 'visible',
+    width: Dimensions.get('window').width / 2,
+    height: Dimensions.get('window').width / 2,
   },
   gridContainer: {
     flex: 1,
