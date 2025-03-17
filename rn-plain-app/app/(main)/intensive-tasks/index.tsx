@@ -1,4 +1,4 @@
-import { BOX_SIZE, COLUMNS, COUNT_ITEMS, MAX, MIN } from '@/constants/DummyData'
+import { BOX_SIZE, COLUMNS, COUNT_ITEMS } from '@/constants/DummyData'
 import { useEffect, useState } from 'react'
 import { Animated, Easing, Image, SafeAreaView, StyleSheet, View } from 'react-native'
 import DraggableGrid from 'react-native-draggable-grid'
@@ -6,41 +6,25 @@ import { ScrollView } from 'react-native-gesture-handler'
 const bgImage = require('../../../assets/images/bg.png')
 
 export type Item = {
+  index: number
   key: string
-  backgroundColor: string
-  borderColor: string
-}
-
-const getRandomNumber = () => {
-  return Math.floor(Math.random() * (MAX - MIN + 1) + MIN)
-}
-
-const generateBgColor = () => {
-  const random = getRandomNumber()
-  return random === 1 ? '#FF6969' : '#6987FF'
-}
-
-const generateBorderColor = () => {
-  const random = getRandomNumber()
-  return random === 1 ? '#F50000' : '#00F535'
 }
 
 const initValues: Item[] = Array.from({ length: COUNT_ITEMS }).map((_, index) => {
   return {
+    index,
     key: (index + 1).toString(),
-    backgroundColor: generateBgColor(),
-    borderColor: generateBorderColor()
   }
 })
 
 export default function IntensiveTasks() {
   const [isScrollEnable, setIsScrollEnable] = useState<boolean>(true)
   const [data, setData] = useState<Item[]>(initValues)
-  const [spinValue, _] = useState(new Animated.Value(0))
+  const [animationValue, _] = useState(new Animated.Value(0))
 
   const runAnimationFn = () => {
     Animated.loop(
-      Animated.timing(spinValue, {
+      Animated.timing(animationValue, {
         toValue: 1,
         duration: 1500,
         easing: Easing.linear,
@@ -49,20 +33,30 @@ export default function IntensiveTasks() {
     ).start()
   }
 
-  const spin = spinValue.interpolate({
+  const spin = animationValue.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "360deg"],
   })
+
+  const backgroundColor = (index: number) => animationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: index % 2 === 0 ? ['#FF6969', '#6987FF'] : ['#6987FF', '#FF6969']
+  });
+
+  const borderColor = (index: number) => animationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: index % 2 === 0 ? ['#F50000', '#00F535'] : ['#00F535', '#F50000']
+  });
 
   useEffect(() => {
     runAnimationFn()
   }, [])
 
-  const renderItem = ({ backgroundColor, borderColor }: Item) => {
+  const renderItem = ({ index }: Item) => {
     return <Animated.View style={{
       ...styles.grid, 
-      backgroundColor,
-      borderColor,
+      backgroundColor: backgroundColor(index),
+      borderColor: borderColor(index),
     }} />
   }
   
