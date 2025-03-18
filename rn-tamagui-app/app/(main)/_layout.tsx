@@ -1,3 +1,4 @@
+import { Words } from "@/constants/Words";
 import { Stack } from "expo-router";
 
 const RootLayout = () => {
@@ -6,25 +7,25 @@ const RootLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="ui-performance"
         options={{
-          headerTitle: "Performance Test",
+          headerTitle: Words.uiPerformance,
         }}
       />
       <Stack.Screen
         name="intensive-tasks"
         options={{
-          headerTitle: "Intensive Tasks",
+          headerTitle: Words.resIntensiveTask,
         }}
       />
       <Stack.Screen
         name="input-responsiveness"
         options={{
-          headerTitle: "Input Responsiveness",
+          headerTitle: Words.inputResponsiveness,
         }}
       />
     </Stack>
