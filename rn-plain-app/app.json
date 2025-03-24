@@ -43,8 +43,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d20e3037-7395-4a89-9805-2ae686774caf"
+        "projectId": "4d7a6f25-fe7d-45e3-93ca-6be3f49641b4"
       }
-    }
+    },
+    "owner": "zog-mobile"
   }
 }
