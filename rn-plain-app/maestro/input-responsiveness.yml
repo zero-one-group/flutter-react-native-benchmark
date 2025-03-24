@@ -1,0 +1,5 @@
+appId: com.zog.plainrn
+---
+- launchApp
+- tapOn: 'INPUT RESPONSIVENESS.*'
+- assertVisible: 'Input Responsiveness.*'

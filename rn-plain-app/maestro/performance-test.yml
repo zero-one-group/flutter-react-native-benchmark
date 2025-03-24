@@ -1,0 +1,13 @@
+appId: com.zog.plainrn
+---
+- launchApp
+- tapOn: 'UI PERFORMANCE.*'
+- assertVisible: 'Performance Test.*'
+- scrollUntilVisible:
+    element:
+      text: "Item 10000"
+    direction: DOWN
+    timeout: 6000000
+    speed: 90
+    visibilityPercentage: 100
+    centerElement: false
