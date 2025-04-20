@@ -4,7 +4,7 @@ import 'package:flutter_app/domain/item_usecase.dart';
 
 class InputResponsivenessViewModel extends ChangeNotifier {
   InputResponsivenessViewModel({required ItemUsecase itemUsecase})
-      : _itemUsecase = itemUsecase;
+    : _itemUsecase = itemUsecase;
 
   final ItemUsecase _itemUsecase;
 
@@ -13,6 +13,14 @@ class InputResponsivenessViewModel extends ChangeNotifier {
 
   bool _shouldShowGrid = true;
   bool get shouldShowGrid => _shouldShowGrid;
+
+  bool _animationEnabled = false;
+  bool get animationEnabled => _animationEnabled;
+
+  void toggleAnimation() {
+    _animationEnabled = !_animationEnabled;
+    notifyListeners();
+  }
 
   void toggleGrid() {
     _shouldShowGrid = !_shouldShowGrid;
