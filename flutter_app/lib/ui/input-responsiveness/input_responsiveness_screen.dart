@@ -25,8 +25,8 @@ class BodyContent extends StatefulWidget {
 class _BodyContentState extends State<BodyContent>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<Color?> _cardColorTween;
-  late final Animation<Color?> _borderColorTween;
+  late final Animation<Color?> _cardColorTweenEven;
+  late final Animation<Color?> _cardColorTweenOdd;
 
   @override
   void initState() {
@@ -34,16 +34,16 @@ class _BodyContentState extends State<BodyContent>
     _controller = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
-    )..repeat();
+    );
 
-    _cardColorTween = ColorTween(
+    _cardColorTweenEven = ColorTween(
       begin: const Color(0xFFFF6969),
       end: const Color(0xFF6987FF),
     ).animate(_controller);
 
-    _borderColorTween = ColorTween(
-      begin: const Color(0xFFF50000),
-      end: const Color(0xFF00F535),
+    _cardColorTweenOdd = ColorTween(
+      begin: const Color(0xFF6987FF),
+      end: const Color(0xFFFF6969),
     ).animate(_controller);
 
     // Use addPostFrameCallback instead of Future.microtask for better performance
@@ -72,9 +72,18 @@ class _BodyContentState extends State<BodyContent>
           top: (size.height - imageSize) / 2 - 50,
           width: imageSize,
           height: imageSize,
-          child: RotationTransition(
-            turns: _controller,
-            child: Image.asset('images/rotating-image.jpg'),
+          child: Consumer<InputResponsivenessViewModel>(
+            builder: (context, viewModel, _) {
+              if (viewModel.animationEnabled) {
+                _controller.repeat();
+              } else {
+                _controller.stop();
+              }
+              return RotationTransition(
+                turns: _controller,
+                child: Image.asset('images/rotating-image.png'),
+              );
+            },
           ),
         ),
         Positioned.fill(
@@ -94,7 +103,7 @@ class _BodyContentState extends State<BodyContent>
                       viewModel.toggleGrid();
                     },
                     child: Text(
-                      viewModel.shouldShowGrid ? 'show list' : 'hide list',
+                      viewModel.shouldShowGrid ? 'Show List' : 'Hide List',
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
@@ -106,31 +115,29 @@ class _BodyContentState extends State<BodyContent>
                         },
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
+                              crossAxisCount: 3,
                               childAspectRatio: 1.0,
                               mainAxisSpacing: 4.0,
                               crossAxisSpacing: 4.0,
                             ),
                         itemCount: viewModel.items.length,
                         itemBuilder: (context, index) {
+                          final isEven = index % 2 == 0;
                           return AnimatedBuilder(
                             key: ValueKey(viewModel.items[index].id),
                             animation: _controller,
                             builder: (context, _) {
                               return Card(
-                                color: _cardColorTween.value,
+                                color:
+                                    viewModel.animationEnabled
+                                        ? (isEven
+                                            ? _cardColorTweenEven.value
+                                            : _cardColorTweenOdd.value)
+                                        : (isEven
+                                            ? const Color(0xFFFF6969)
+                                            : const Color(0xFF6987FF)),
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: _borderColorTween.value!,
-                                    width: 2,
-                                  ),
                                   borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    viewModel.items[index].name,
-                                    textAlign: TextAlign.center,
-                                  ),
                                 ),
                               );
                             },
