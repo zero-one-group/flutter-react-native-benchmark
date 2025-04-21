@@ -39,7 +39,9 @@ class _BodyContentState extends State<BodyContent> {
       builder: (context, items, _) {
         return ListView.builder(
           itemCount: items.length,
-          itemBuilder: (_, index) => ListTile(title: Text(items[index].name)),
+          itemBuilder: (_, index) {
+            return ListTile(title: Text(items[index].name));
+          },
         );
       },
     );

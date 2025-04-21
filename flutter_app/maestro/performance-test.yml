@@ -1,0 +1,13 @@
+appId: com.example.flutter_app
+---
+- launchApp
+- tapOn: Pure UI Performance Test
+- assertVisible: Pure Performance Test
+- scrollUntilVisible:
+    element:
+      text: "Item 100"
+    direction: DOWN
+    timeout: 50000
+    speed: 40 
+    visibilityPercentage: 100 
+    centerElement: false 
