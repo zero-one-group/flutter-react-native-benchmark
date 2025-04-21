@@ -1,0 +1,5 @@
+appId: com.example.flutter_app
+---
+- launchApp
+- tapOn: Resource Intensive Test
+- assertVisible: Resource Intensive Test
