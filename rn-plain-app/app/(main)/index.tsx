@@ -5,7 +5,7 @@ import { Href, router } from 'expo-router';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-type Path = '/ui-performance' | '/intensive-tasks' | '/input-responsiveness'
+type Path = '/ui-performance' | '/intensive-tasks' | '/intensive-tasks-reanimated' | '/input-responsiveness'
 
 type Content = {
   label: string,
@@ -24,6 +24,11 @@ export default function Home() {
       label: 'RES: INTENSIVE TASKS',
       color: '#CFFFF5',
       route: '/intensive-tasks'
+    },
+    {
+      label: 'RES: INTENSIVE TASKS (REANIMATED)',
+      color: '#CFFFF5',
+      route: '/intensive-tasks-reanimated'
     },
     {
       label: 'INPUT RESPONSIVENESS',

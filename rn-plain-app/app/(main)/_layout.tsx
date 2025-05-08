@@ -22,6 +22,12 @@ const RootLayout = () => {
         }}
       />
       <Stack.Screen
+        name="intensive-tasks-reanimated"
+        options={{
+          headerTitle: "Intensive Tasks (Reanimated)",
+        }}
+      />
+      <Stack.Screen
         name="input-responsiveness"
         options={{
           headerTitle: "Input Responsiveness",
