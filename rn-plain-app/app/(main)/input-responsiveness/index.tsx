@@ -1,7 +1,9 @@
 import { BOX_SIZE, COLUMNS, COUNT_ITEMS } from '@/constants/DummyData';
 import { useEffect, useState } from 'react';
-import { Animated, Dimensions, Easing, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, Easing, interpolateColor } from 'react-native-reanimated';
 import DraggableGrid from 'react-native-draggable-grid';
+import { ScrollView } from 'react-native-gesture-handler';
 const bgImage = require('../../../assets/images/rotating-image.jpg')
 
 export type Item = {
@@ -20,34 +22,47 @@ export default function InputResponsiveness() {
   const [isScrollEnable, setIsScrollEnable] = useState<boolean>(true)
   const [data, setData] = useState<Item[]>(initValues)
   const [isShow, setIsShow] = useState<boolean>(true);
-  const [animationValue, _] = useState(new Animated.Value(0))
+  const rotation = useSharedValue(0)
+  const colorChanges = useSharedValue(0)
 
   const runAnimationFn = () => {
-    Animated.loop(
-      Animated.timing(animationValue, {
-        toValue: 1,
-        duration: 1500,
-        easing: Easing.linear,
-        useNativeDriver: true
-      })
-    ).start()
+    rotation.value = withRepeat(
+      withTiming(360, { duration: 1500, easing: Easing.linear }),
+      -1,
+      false
+    )
+    colorChanges.value = withRepeat(withTiming(1, { duration: 1500 }), -1, true)
   }
 
-  const spin = animationValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
+  const spin = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }]
+  }))
+
+  const backgroundColor1 = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        colorChanges.value,
+        [0, 1],
+        ['#FF6969', '#6987FF']
+      )
+    }
   })
 
-  const backgroundColor = (index: number) => animationValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: index % 2 === 0 ? ['#FF6969', '#6987FF'] : ['#6987FF', '#FF6969']
-  });
+  const backgroundColor2 = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        colorChanges.value,
+        [0, 1],
+        ['#6987FF', '#FF6969']
+      )
+    }
+  })
 
   const renderItem = ({ index }: Item) => {
-    return <Animated.View style={{
-      ...styles.grid, 
-      backgroundColor: backgroundColor(index),
-    }} />
+    return <Animated.View style={[
+      styles.grid,
+      index % 2 === 0 ? backgroundColor1 : backgroundColor2,
+    ]} />
   }
 
   useEffect(() => {
@@ -62,14 +77,14 @@ export default function InputResponsiveness() {
           setIsShow(prev => !prev)
         }}
       >
-        <Animated.View>
+        <View>
           <Animated.Text style={{color: 'white', fontWeight: '500'}}>
             {isShow ? 'Hide List' : 'Show List'}
           </Animated.Text>
-        </Animated.View>
+        </View>
       </Pressable>
       <View style={styles.imageContainer}>
-        <Animated.View style={{transform: [{ rotate: spin }]}}>
+        <Animated.View style={spin}>
           <Image resizeMode='cover' source={bgImage} style={styles.image} />
         </Animated.View>
       </View>
