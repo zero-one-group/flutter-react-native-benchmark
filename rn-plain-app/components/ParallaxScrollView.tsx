@@ -26,7 +26,15 @@ export default function ParallaxScrollView({
   const colorScheme = useColorScheme() ?? 'light';
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
-  const bottom = useBottomTabOverflow();
+  // Use a safe default value for bottom tab height to prevent crashes
+  let bottom = 0;
+  try {
+    // Only try to use this hook if it's available
+    bottom = useBottomTabOverflow();
+  } catch (error) {
+    // If the hook fails, we'll use the default value of 0
+    console.log('Bottom tab bar not available, using default height');
+  }
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
