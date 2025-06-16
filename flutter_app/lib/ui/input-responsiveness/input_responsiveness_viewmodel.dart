@@ -15,7 +15,7 @@ class InputResponsivenessViewModel extends ChangeNotifier {
   bool get shouldShowGrid => _shouldShowGrid;
 
   bool _animationEnabled = false;
-  bool get animationEnabled => _animationEnabled;
+  bool get animationEnabled => true;
 
   void toggleAnimation() {
     _animationEnabled = !_animationEnabled;

@@ -23,11 +23,6 @@ export default function Home() {
     {
       label: 'RES: INTENSIVE TASKS',
       color: '#CFFFF5',
-      route: '/intensive-tasks'
-    },
-    {
-      label: 'RES: INTENSIVE TASKS (REANIMATED)',
-      color: '#CFFFF5',
       route: '/intensive-tasks-reanimated'
     },
     {

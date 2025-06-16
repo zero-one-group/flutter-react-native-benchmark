@@ -29,8 +29,7 @@ class _BodyContentState extends State<BodyContent>
   late final Animation<Color?> _cardColorTweenOdd;
   late final Animation<Color?> _borderColorTween;
 
-  bool get isAnimationEnabled =>
-      context.read<ResourceIntensiveViewModel>().animationEnabled;
+  bool get isAnimationEnabled => true;
 
   static const _imageSize = 200.0;
   static const _gridDelegateParams = SliverGridDelegateWithFixedCrossAxisCount(
